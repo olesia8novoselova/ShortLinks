@@ -2,9 +2,9 @@ package handlers
 
 import (
 	"encoding/json"
-	"short-links/models"
-	"short-links/storage"
-	"short-links/utils"
+	"short-links/internal/models"
+	"short-links/internal/storage"
+	"short-links/internal/utils"
 	"net/http"
 )
 
@@ -58,7 +58,7 @@ func (h *Handler) GetOriginalURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// get the original URL from the storage
+	// get the short URL from the storage
 	original_url, err := h.urlStorage.Get(short_url)
 	if err != nil {
 		http.Error(w, "URL not found", http.StatusNotFound)

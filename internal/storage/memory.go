@@ -1,7 +1,7 @@
 package storage
 
 import (
-	"short-links/models"
+	"short-links/internal/models"
 	"sync"
 )
 

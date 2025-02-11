@@ -1,8 +1,8 @@
 package main
 
 import (
-	"short-links/handlers"
-	"short-links/storage"
+	"short-links/internal/handlers"
+	"short-links/internal/storage"
 	"net/http"
 	"log"
 )
