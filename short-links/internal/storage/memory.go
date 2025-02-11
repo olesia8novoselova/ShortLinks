@@ -3,11 +3,12 @@ package storage
 import (
 	"short-links/internal/models"
 	"sync"
+	"fmt"
 )
 
 type MemoryStorage struct {
 	urls map[string]string
-	mu sync.Mutex
+	mu   sync.Mutex
 }
 
 func NewMemoryStorage() *MemoryStorage {
@@ -24,13 +25,20 @@ func (s *MemoryStorage) Save(url models.URL) error {
 	return nil
 }
 
-func (s *MemoryStorage) Get(short_url string) (string, error) {
+func (s *MemoryStorage) Get(shortURL string) (string, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	
-	original_url, ok := s.urls[short_url]
-	if !ok {
-		return "URL not found", nil
+
+	originalURL, exists := s.urls[shortURL]
+	if !exists {
+		return "", fmt.Errorf("URL not found")
 	}
-	return original_url, nil
+	return originalURL, nil
+}
+
+func (s *MemoryStorage) Exists(shortURL string) bool {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	_, exists := s.urls[shortURL]
+	return exists
 }

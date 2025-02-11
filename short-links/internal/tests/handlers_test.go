@@ -1,9 +1,9 @@
 package tests
 
 import (
-	"short-links/handlers"
-	"short-links/storage"
-	"short-links/utils"
+	"short-links/internal/handlers"
+	"short-links/internal/storage"
+	"short-links/internal/utils"
 	"testing"
 	"strings"
 	"net/http"

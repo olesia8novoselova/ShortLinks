@@ -5,7 +5,6 @@ import (
 	"encoding/base64"
 	"math/rand"
 	"strings"
-	"time"
 )
 
 func GenerateShortUrl(original_url string) string {
@@ -24,6 +23,5 @@ func GenerateShortUrl(original_url string) string {
 // collision handling
 func GenerateRandomSymbol() string {
 	const symbols = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
-	rand.Seed(time.Now().UnixNano())
 	return string(symbols[rand.Intn(len(symbols))])
 }
