@@ -3,6 +3,8 @@ package config
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+
 	"github.com/joho/godotenv"
 )
 
@@ -16,9 +18,10 @@ type DBConfig struct {
 }
 
 func LoadDBConfig() *DBConfig {
-	err := godotenv.Load()
+	err := godotenv.Load(filepath.Join("../../.env"))
 	if err != nil {
-		fmt.Println("Error loading .env file")
+		fmt.Println("Error loading .env file", err)
+
 	}
 	return &DBConfig{
 		Host:     GetEnv("DB_HOST", "localhost"),

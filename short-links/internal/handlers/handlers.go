@@ -23,9 +23,15 @@ func (h *Handler) ShortenURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// ensure original_url is not empty
+	if url.Original == "" {
+		http.Error(w, "Missing or empty original_url", http.StatusBadRequest)
+		return
+	}
+
 	url.Short = utils.GenerateShortUrl(url.Original)
 
-	// Ensure unique short URL
+	// ensure unique short URL
 	for h.storage.Exists(url.Short) {
 		url.Short += utils.GenerateRandomSymbol()
 	}

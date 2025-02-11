@@ -3,10 +3,25 @@ package storage
 import (
 	"testing"
 	"short-links/internal/models"
+	"short-links/internal/config"
+	"fmt"
 )
 
-func TestMemoryStorage(t *testing.T) {
-	store := NewMemoryStorage()
+func TestPostgresStorage(t *testing.T) {
+	dbConfig := config.LoadDBConfig()
+	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+		dbConfig.Host,
+		dbConfig.Port,
+		dbConfig.User,
+		dbConfig.Password,
+		dbConfig.DBName,
+		dbConfig.SSLMode,
+	)
+
+	store, err := NewPostgresStorage(connStr)
+	if err != nil {
+		t.Fatalf("Failed to initialize PostgreSQL storage: %v", err)
+	}
 
 	// test Save and Get
 	url := models.URL{Original: "https://example.com", Short: "abc123ABC_"}

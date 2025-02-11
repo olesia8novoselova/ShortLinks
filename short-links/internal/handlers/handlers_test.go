@@ -1,9 +1,9 @@
-package tests
+package handlers
 
 import (
-	"short-links/internal/handlers"
 	"short-links/internal/storage"
 	"short-links/internal/utils"
+	"short-links/internal/models"
 	"testing"
 	"strings"
 	"net/http"
@@ -15,13 +15,13 @@ func TestGenerateShortUrl(t *testing.T) {
 	short_url := utils.GenerateShortUrl(original_url)
 
 	if len(short_url) != 10 {
-		t.Error("Expected short URL length to be 10, but got %d", len(short_url))
+		t.Error("Expected short URL length to be 10, but got ", len(short_url))
 	}
 }
 
 func TestShortenUrl(t *testing.T) {
 	urlStorage := storage.NewMemoryStorage()
-	handler := handlers.NewHandler(urlStorage)
+	handler := NewHandler(urlStorage)
 
 	// test valid request
 	requestBody := `{"original_url": "https://example.com"}`
@@ -35,9 +35,21 @@ func TestShortenUrl(t *testing.T) {
 		t.Errorf("Expected status code %d, but got %d", http.StatusCreated, w.Code)
 	}
 
-	// test invalid request
+	// test invalid request (missing original_url)
 	requestBody = `{"invalid": "data"}`
 	request = httptest.NewRequest("POST", "/shorten", strings.NewReader(requestBody))
+	w = httptest.NewRecorder()
+
+	handler.ShortenURL(w, request)
+
+	if w.Code != http.StatusBadRequest {
+		t.Errorf("Expected status code %d, but got %d", http.StatusBadRequest, w.Code)
+	}
+
+	// test invalid JSON
+	requestBody = `invalid json`
+	request = httptest.NewRequest("POST", "/shorten", strings.NewReader(requestBody))
+	request.Header.Set("Content-Type", "application/json")
 	w = httptest.NewRecorder()
 
 	handler.ShortenURL(w, request)
@@ -49,7 +61,7 @@ func TestShortenUrl(t *testing.T) {
 
 func TestGetOriginalUrl(t *testing.T) {
 	urlStorage := storage.NewMemoryStorage()
-	handler := handlers.NewHandler(urlStorage)
+	handler := NewHandler(urlStorage)
 
 	urlStorage.Save(models.URL{Original: "https://example.com", Short: "abc123ABC_"})
 
