@@ -16,6 +16,7 @@ func NewHandler(storage storage.Storage) *Handler {
 	return &Handler{storage: storage}
 }
 
+// POST request
 func (h *Handler) ShortenURL(w http.ResponseWriter, r *http.Request) {
 	var url models.URL
 	if err := json.NewDecoder(r.Body).Decode(&url); err != nil {
@@ -46,6 +47,8 @@ func (h *Handler) ShortenURL(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(url)
 }
 
+
+// GET request
 func (h *Handler) GetOriginalURL(w http.ResponseWriter, r *http.Request) {
 	shortURL := r.URL.Query().Get("short_url")
 	if shortURL == "" {
