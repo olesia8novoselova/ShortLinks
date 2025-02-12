@@ -9,7 +9,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o /short-links ./cmd/server
 FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /short-links .
-COPY .env .env
+COPY .env.example .env
 
 EXPOSE 8080
 CMD ["./short-links", "-storage", "postgres"]
