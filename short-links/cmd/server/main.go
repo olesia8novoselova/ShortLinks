@@ -13,10 +13,10 @@ import (
 
 func main() {
 	
+	// the storage type is specified as a parameter when starting the service
 	storageType := flag.String("storage", "memory", "Storage type (memory|postgres)")
 	flag.Parse()
 
-	
 	var store storage.Storage
 	var err error
 

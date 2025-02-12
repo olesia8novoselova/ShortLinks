@@ -56,6 +56,7 @@ func (h *Handler) GetOriginalURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// ensure short URL exists
 	originalURL, err := h.storage.Get(shortURL)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)

@@ -18,6 +18,7 @@ func TestPostgresStorage(t *testing.T) {
 		dbConfig.SSLMode,
 	)
 
+	// initialize PostgreSQL storage
 	store, err := NewPostgresStorage(connStr)
 	if err != nil {
 		t.Fatalf("Failed to initialize PostgreSQL storage: %v", err)
@@ -29,6 +30,7 @@ func TestPostgresStorage(t *testing.T) {
 		t.Errorf("Failed to save URL: %v", err)
 	}
 
+	// test retrieving saved URL
 	original, err := store.Get(url.Short)
 	if err != nil {
 		t.Errorf("Failed to get URL: %v", err)
