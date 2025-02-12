@@ -9,6 +9,17 @@ on:
 jobs:
   lint-and-test:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpass
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -18,12 +29,26 @@ jobs:
         with:
           go-version: '1.21'
 
+      - name: Setup environment variables
+        run: |
+          echo "DB_HOST=localhost" >> $GITHUB_ENV
+          echo "DB_PORT=5432" >> $GITHUB_ENV
+          echo "DB_USER=testuser" >> $GITHUB_ENV
+          echo "DB_PASSWORD=testpass" >> $GITHUB_ENV
+          echo "DB_NAME=testdb" >> $GITHUB_ENV
+
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v3
         with:
           version: v1.54
 
       - name: Run unit tests
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USER: testuser
+          DB_PASSWORD: testpass
+          DB_NAME: testdb
         run: go test -v ./...
 
   build-docker:
