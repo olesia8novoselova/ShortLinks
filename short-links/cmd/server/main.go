@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	
+
 	// the storage type is specified as a parameter when starting the service
 	storageType := flag.String("storage", "memory", "Storage type (memory|postgres)")
 	flag.Parse()
@@ -34,7 +34,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to initialize storage: %v", err)
 	}
-	
+
 	handler := handlers.NewHandler(store)
 
 	http.HandleFunc("/shorten", handler.ShortenURL)

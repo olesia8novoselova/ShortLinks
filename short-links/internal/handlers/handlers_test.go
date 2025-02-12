@@ -1,13 +1,13 @@
 package handlers
 
 import (
-	"short-links/internal/storage"
-	"short-links/internal/utils"
-	"short-links/internal/models"
-	"testing"
-	"strings"
 	"net/http"
 	"net/http/httptest"
+	"short-links/internal/models"
+	"short-links/internal/storage"
+	"short-links/internal/utils"
+	"strings"
+	"testing"
 )
 
 func TestGenerateShortUrl(t *testing.T) {
@@ -63,7 +63,9 @@ func TestGetOriginalUrl(t *testing.T) {
 	urlStorage := storage.NewMemoryStorage()
 	handler := NewHandler(urlStorage)
 
-	urlStorage.Save(models.URL{Original: "https://example.com", Short: "abc123ABC_"})
+	if err := urlStorage.Save(models.URL{Original: "https://example.com", Short: "abc123ABC_"}); err != nil {
+		t.Errorf("Failed to save URL: %v", err)
+	}
 
 	// test valid request
 	request := httptest.NewRequest("GET", "/original?short_url=abc123ABC_", nil)
@@ -81,7 +83,7 @@ func TestGetOriginalUrl(t *testing.T) {
 
 	handler.GetOriginalURL(w, request)
 
-	if w.Code != http.StatusBadRequest {	
+	if w.Code != http.StatusBadRequest {
 		t.Errorf("Expected status code %d, but got %d", http.StatusBadRequest, w.Code)
 	}
 

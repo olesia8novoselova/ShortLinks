@@ -44,9 +44,11 @@ func (h *Handler) ShortenURL(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(url)
+	if err := json.NewEncoder(w).Encode(url); err != nil {
+		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+		return
+	}
 }
-
 
 // GET request
 func (h *Handler) GetOriginalURL(w http.ResponseWriter, r *http.Request) {
@@ -65,5 +67,8 @@ func (h *Handler) GetOriginalURL(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]string{"original_url": originalURL})
+	if err := json.NewEncoder(w).Encode(map[string]string{"original_url": originalURL}); err != nil {
+		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+		return
+	}
 }

@@ -1,9 +1,9 @@
 package storage
 
 import (
+	"fmt"
 	"short-links/internal/models"
 	"sync"
-	"fmt"
 )
 
 // map of URLs and a mutex for thread safety
@@ -11,7 +11,6 @@ type MemoryStorage struct {
 	urls map[string]string
 	mu   sync.Mutex
 }
-
 
 func NewMemoryStorage() *MemoryStorage {
 	return &MemoryStorage{

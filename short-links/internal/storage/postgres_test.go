@@ -1,10 +1,10 @@
 package storage
 
 import (
-	"testing"
-	"short-links/internal/models"
-	"short-links/internal/config"
 	"fmt"
+	"short-links/internal/config"
+	"short-links/internal/models"
+	"testing"
 )
 
 func TestPostgresStorage(t *testing.T) {

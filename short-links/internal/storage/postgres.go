@@ -4,7 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"short-links/internal/models"
-	_ "github.com/lib/pq"
+
+	_ "github.com/lib/pq" // PostgreSQL driver
 )
 
 type PostgresStorage struct {
