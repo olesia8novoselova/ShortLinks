@@ -18,38 +18,38 @@ func TestPostgresStorage(t *testing.T) {
 		dbConfig.SSLMode,
 	)
 
-	// initialize PostgreSQL storage
+	// инициализация PostgreSQL хранилища
 	store, err := NewPostgresStorage(connStr)
 	if err != nil {
-		t.Fatalf("Failed to initialize PostgreSQL storage: %v", err)
+		t.Fatalf("Не удалось инициализировать PostgreSQL хранилище: %v", err)
 	}
 
-	// test Save and Get
+	// тест Save и Get
 	url := models.URL{Original: "https://example.com", Short: "abc123ABC_"}
 	if err := store.Save(url); err != nil {
-		t.Errorf("Failed to save URL: %v", err)
+		t.Errorf("Не удалось сохранить URL: %v", err)
 	}
 
-	// test retrieving saved URL
+	// тест получения сохраненного URL
 	original, err := store.Get(url.Short)
 	if err != nil {
-		t.Errorf("Failed to get URL: %v", err)
+		t.Errorf("Не удалось получить URL: %v", err)
 	}
 	if original != url.Original {
-		t.Errorf("Expected original URL %s, got %s", url.Original, original)
+		t.Errorf("Ожидался оригинальный URL %s, получен %s", url.Original, original)
 	}
 
-	// test non-existent URL
+	// тест несуществующего URL
 	_, err = store.Get("invalid")
 	if err == nil {
-		t.Error("Expected error for non-existent URL")
+		t.Error("Ожидалась ошибка для несуществующего URL")
 	}
 
-	// test Exists
+	// тест Exists
 	if !store.Exists(url.Short) {
-		t.Error("Expected URL to exist")
+		t.Error("Ожидалось, что URL существует")
 	}
 	if store.Exists("invalid") {
-		t.Error("Expected URL to not exist")
+		t.Error("Ожидалось, что URL не существует")
 	}
 }

@@ -6,7 +6,7 @@ import (
 	"sync"
 )
 
-// map of URLs and a mutex for thread safety
+// map для хранения URL и mutex для потокобезопасности
 type MemoryStorage struct {
 	urls map[string]string
 	mu   sync.Mutex
@@ -18,7 +18,7 @@ func NewMemoryStorage() *MemoryStorage {
 	}
 }
 
-// Save saves a URL in the memory storage
+// Save сохраняет URL в памяти
 func (s *MemoryStorage) Save(url models.URL) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -27,19 +27,19 @@ func (s *MemoryStorage) Save(url models.URL) error {
 	return nil
 }
 
-// Get retrieves the original URL from the storage by its shortened version
+// Get извлекает оригинальный URL из хранилища по его сокращенной версии
 func (s *MemoryStorage) Get(shortURL string) (string, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
 	originalURL, exists := s.urls[shortURL]
 	if !exists {
-		return "", fmt.Errorf("URL not found")
+		return "", fmt.Errorf("URL не найден")
 	}
 	return originalURL, nil
 }
 
-// Exists checks if a shortened URL exists in the storage
+// Exists проверяет, существует ли сокращенный URL в хранилище
 func (s *MemoryStorage) Exists(shortURL string) bool {
 	s.mu.Lock()
 	defer s.mu.Unlock()

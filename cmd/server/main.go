@@ -9,16 +9,21 @@ import (
 	"short-links/internal/config"
 	"short-links/internal/handlers"
 	"short-links/internal/storage"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
 
-	// the storage type is specified as a parameter when starting the service
-	storageType := flag.String("storage", "memory", "Storage type (memory|postgres)")
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Ошибка загрузки .env файла")
+	}
+	// тип хранилища указывается как параметр при запуске сервиса
+	storageType := flag.String("storage", "memory", "Тип хранилища (memory|postgres)")
 	flag.Parse()
 
 	var store storage.Storage
-	var err error
 
 	switch *storageType {
 	case "postgres":
@@ -28,11 +33,11 @@ func main() {
 	case "memory":
 		store = storage.NewMemoryStorage()
 	default:
-		log.Fatalf("Invalid storage type: %s", *storageType)
+		log.Fatalf("Неверный тип хранилища: %s", *storageType)
 	}
 
 	if err != nil {
-		log.Fatalf("Failed to initialize storage: %v", err)
+		log.Fatalf("Не удалось инициализировать хранилище: %v", err)
 	}
 
 	handler := handlers.NewHandler(store)
@@ -41,7 +46,7 @@ func main() {
 	http.HandleFunc("/original", handler.GetOriginalURL)
 
 	port := getPort()
-	log.Printf("Server started on port %s using %s storage", port, *storageType)
+	log.Printf("Сервер запущен на порту %s с использованием хранилища %s", port, *storageType)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 

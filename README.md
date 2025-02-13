@@ -1,3 +1,3 @@
 # ShortLinks
 
-Service that provides an API for creating shortened links.
+Сервис, предоставляющий API для создания сокращённых ссылок.

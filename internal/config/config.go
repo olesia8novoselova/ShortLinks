@@ -18,11 +18,24 @@ type DBConfig struct {
 }
 
 func LoadDBConfig() *DBConfig {
-	err := godotenv.Load(filepath.Join("../../.env"))
-	if err != nil {
-		fmt.Println("Error loading .env file", err)
-
+	// несколько путей для загрузки файла .env
+	envPaths := []string{
+		filepath.Join(".env"),             // для запуска сервера
+		filepath.Join("..", "..", ".env"), // для запуска тестов
 	}
+
+	var err error
+	for _, path := range envPaths {
+		err = godotenv.Load(path)
+		if err == nil {
+			break
+		}
+	}
+
+	if err != nil {
+		fmt.Println("Ошибка загрузки файла .env", err)
+	}
+
 	return &DBConfig{
 		Host:     GetEnv("DB_HOST", "localhost"),
 		Port:     GetEnv("DB_PORT", "5432"),

@@ -1,30 +1,31 @@
 package utils
 
 import (
-	"crypto/sha1"
-	"encoding/base64"
-	"math/rand"
-	"strings"
+	"crypto/sha256"
+	"encoding/hex"
+	"math/big"
 )
 
-// generating a short URL based on the original URL using SHA1 hash and Base64 encoding
-func GenerateShortUrl(original_url string) string {
-	// calculate SHA1 hash of the original URL
-	hash := sha1.Sum([]byte(original_url))
-	// encode the hash using Base64 URL encoding
-	short_url := base64.URLEncoding.EncodeToString(hash[:])
-	// remove padding characters
-	short_url = strings.TrimRight(short_url, "=")
+// допустимый набор символов для короткого URL
+const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
 
-	if len(short_url) > 10 {
-		short_url = short_url[:10]
+func GenerateShortUrl(originalUrl string) string {
+	// вычисляем SHA256 хэш оригинального URL
+	hash := sha256.Sum256([]byte(originalUrl))
+	// преобразуем хэш в шестнадцатеричную строку
+	hashHex := hex.EncodeToString(hash[:])
+	// преобразуем шестнадцатеричную строку в большое целое число
+	hashInt := new(big.Int)
+	hashInt.SetString(hashHex, 16)
+
+	var shortUrl string
+	for i := 0; i < 10; i++ {
+		// вычисляем остаток от деления на длину набора символов
+		remainder := new(big.Int).Mod(hashInt, big.NewInt(int64(len(charset))))
+		// добавляем символ из набора charset в shortUrl
+		shortUrl += string(charset[remainder.Int64()])
+		// делим hashInt на длину набора символов для следующей итерации
+		hashInt.Div(hashInt, big.NewInt(int64(len(charset))))
 	}
-
-	return short_url
-}
-
-// generating a random alphanumeric symbol (including underscore) for collision handling
-func GenerateRandomSymbol() string {
-	const symbols = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
-	return string(symbols[rand.Intn(len(symbols))])
+	return shortUrl
 }
