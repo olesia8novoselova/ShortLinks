@@ -1,41 +1,40 @@
 # ShortLinks
 
-## Description
+## Описание
 
-This project is a URL shortener service that provides an API for creating shortened URLs in the following format:
-- Each shortened URL must be unique, and for a given original URL, only one shortened URL should exist.
-- The shortened URL must be 10 characters long.
-- The shortened URL must consist of uppercase and lowercase Latin letters, digits, and the underscore (_) character.
+Этот проект представляет собой сервис, который предоставляет API для создания сокращённых URL в следующем формате:
+- Каждый сокращённый URL должен быть уникальным, и для заданного оригинального URL должен существовать только один сокращённый URL.
+- Сокращённый URL должен быть длиной 10 символов.
+- Сокращённый URL должен состоять из букв латинского алфавита (верхнего и нижнего регистра), цифр и символа подчёркивания (_).
 
-## Technology Stack
+## Стек технологий
 
-- **Language:** Go
-- **Database:** PostgreSQL (or an in-memory storage alternative)
-- **Containerization:** Docker
+- **Язык программирования:** Go
+- **База данных:** PostgreSQL (или альтернативное хранилище в памяти)
+- **Контейнеризация:** Docker
 
 ## API Endpoints
 
-The service provides the following HTTP endpoints:
+Сервис предоставляет следующие HTTP-эндпоинты:
 
 1. **POST /shorten**
-   - Saves the original URL in the database and returns a shortened URL.
+   - Сохраняет оригинальный URL в базе данных и возвращает сокращённый URL.
    
 2. **GET /{shortened_url}**
-   - Accepts a shortened URL and returns the original URL.
+   - Принимает сокращённый URL и возвращает оригинальный URL.
 
-## Deployment
+## Развёртывание
 
-The service is designed to be deployed as a **Docker image**.
+Сервис предназначен для развёртывания в виде **Docker-образа**.
 
-## Storage Options
+## Варианты хранения
 
-The service supports two storage implementations, specified as a parameter at runtime:
+Сервис поддерживает две реализации хранения, которые указываются в качестве параметра при запуске:
 1. **PostgreSQL**
-2. **In-memory storage** (custom implementation for storing links within the application)
+2. **Хранение в памяти** (пользовательская реализация для хранения ссылок внутри приложения)
 
-## Testing
+## Тестирование
 
-The project includes **unit tests** to ensure the correctness of the implemented functionality.
+Проект включает **юнит-тесты** для проверки корректности реализованной функциональности.
 
 ---
-
